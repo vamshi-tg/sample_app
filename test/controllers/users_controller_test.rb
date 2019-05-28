@@ -4,6 +4,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:test_user_1)
     @other_user = users(:test_user_2)
+    @unactivated_user = users(:test_user_999)
   end
   
   test "should get new" do
@@ -51,6 +52,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference 'User.count' do
       delete user_path(@user)
     end
+    assert_redirected_to root_url
+  end
+
+  test "should redirect when non-activated user page is accessed" do
+    log_in_as(@other_user)
+    get user_path(@unactivated_user)
     assert_redirected_to root_url
   end
 end
